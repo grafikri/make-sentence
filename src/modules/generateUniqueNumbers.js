@@ -1,7 +1,10 @@
 export default (options = {}) => {
   const { count = 5, range = { min: 0, max: 10 } } = options;
-  const min = range.min;
-  const max = range.max + 1;
+
+  const { min = 0 } = range;
+  let { max = 10 } = range;
+  max = max + 1;
+
   if (count > max - min) throw new Error("Range can not be smaller than count");
 
   const numbers = [];
