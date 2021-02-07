@@ -7,8 +7,22 @@
     </div>
     <b-row class="my-2">
       <b-col>
-        Remain: {{ this.wordSet.length - this.selectedKeys.length }} /
+        Archive: {{ this.allWords.length }}
+        <br />
+        Remain:
+        {{ this.wordSet.length - this.selectedKeys.length }} /
         {{ this.wordSet.length }}
+      </b-col>
+      <b-col>
+        <b-form-select
+          v-model="selected"
+          :options="[
+            { value: 5, text: 5 },
+            { value: 7, text: 7 },
+            { value: 10, text: 10 },
+            { value: 20, text: 20 }
+          ]"
+        ></b-form-select>
       </b-col>
     </b-row>
     <b-row class="my-2">
@@ -29,8 +43,7 @@
         <b-form-textarea
           v-model="text"
           placeholder="Enter something..."
-          rows="3"
-          max-rows="6"
+          rows="8"
         ></b-form-textarea>
       </b-col>
     </b-row>
@@ -44,15 +57,18 @@ import {
   BRow,
   BCol,
   BBadge,
-  BButton
+  BButton,
+  BFormSelect
 } from "bootstrap-vue";
 
 import randomNumbers from "@/modules/generateUniqueNumbers.js";
+import allWords from "@/modules/words.js";
 
 export default {
   name: "Home",
   components: {
     BFormTextarea,
+    BFormSelect,
     BContainer,
     BButton,
     BRow,
@@ -60,6 +76,9 @@ export default {
     BBadge
   },
   computed: {
+    limitedWordCount() {
+      return this.selected;
+    },
     wordSet() {
       return this.words.map((item, index) => ({
         id: index,
@@ -72,7 +91,9 @@ export default {
 
       return this.words
         .map((item, index) =>
-          textArr.find(textItem => textItem === item) ? index : undefined
+          textArr.find(textItem => textItem.indexOf(item) !== -1)
+            ? index
+            : undefined
         )
         .filter(item => item !== undefined);
     }
@@ -80,7 +101,7 @@ export default {
   methods: {
     handleClick() {
       const indexes = randomNumbers({
-        count: 3,
+        count: this.limitedWordCount,
         range: { max: this.allWords.length - 1 }
       });
 
@@ -91,17 +112,10 @@ export default {
   },
   data() {
     return {
+      selected: 5,
       text: "",
       words: [],
-      allWords: [
-        "apple",
-        "car",
-        "mercedes",
-        "honda",
-        "yamaha",
-        "mercedes",
-        "suzuki"
-      ]
+      allWords
     };
   }
 };
