@@ -34,8 +34,15 @@
           v-for="(item, index) in wordSet"
           pill
           :variant="item.selected ? 'success' : 'light'"
-          >{{ item.value }}</b-badge
         >
+          <a
+            target="blank"
+            :href="
+              `https://dictionary.cambridge.org/tr/s%C3%B6zl%C3%BCk/ingilizce/${item.value}`
+            "
+            >{{ item.value }}</a
+          >
+        </b-badge>
       </b-col>
     </b-row>
     <b-row>
